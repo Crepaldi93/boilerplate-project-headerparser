@@ -26,25 +26,29 @@ app.get('/api/hello', function (req, res) {
 
 // Respond to requests at /api/:date?
 app.get('/api/:date?', function (req, res) {
-
-  // Get date in milliseconds and store it into a variable
-  let dateNumber = +req.params.date
-  console.log(dateNumber);
-  console.log(typeof(dateNumber));
-
-  // Get full date using the dateNumber variable
-  let myDate = new Date(dateNumber);
-  console.log(myDate);
-
-  // Check if dateNumber is valid
-  if (typeof(dateNumber) === "number") {
-
-    console.log("valid input")
+  // Check if date is empty
+  if (req.params.date = "") {
+    let myDate = new Date();
+    let myDateString = myDate.toGMTString();
   } else {
-    // If input date string is invalid
-    res.json({error : "Invalid Date"});
-  }
+    // Get date in milliseconds and store it into a variable
+    let dateNumber = +req.params.date
+    console.log(dateNumber);
+    console.log(typeof(dateNumber));
 
+    // Get full date using the dateNumber variable
+    let myDate = new Date(dateNumber);
+    console.log(myDate);
+
+    // Check if dateNumber is valid
+    if (typeof(dateNumber) === "number") {
+
+      console.log("valid input")
+    } else {
+      // If input date string is invalid
+      res.json({error : "Invalid Date"});
+    } 
+  }
 })
 
 // listen for requests :)
