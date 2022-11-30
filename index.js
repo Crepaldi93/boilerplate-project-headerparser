@@ -26,28 +26,36 @@ app.get('/api/hello', function (req, res) {
 
 // Respond to requests at /api/:date?
 app.get('/api/:date?', function (req, res) {
-  // Check if date is empty
-  if (req.params.date = "") {
-    let myDate = new Date();
+  // Check if input is a valid date
+  if (Date.parse(req.params.date)) {
+    let dateInMilliseconds = Date.parse(req.params.date);
+    let myDate = new Date(dateInMilliseconds);
     let myDateString = myDate.toGMTString();
+    
+    // Respond if input is a valid date
+    res.json({unix: dateInMilliseconds, utc: myDateString})
+  
+  // Check if input is a number  
+  } else if (!isNaN(req.params.date)) {
+    let dateInMilliseconds = +req.params.date;
+    let myDate = new Date(dateInMilliseconds);
+    let myDateString = myDate.toGMTString();
+
+    // Respond if input is a number
+    res.json({unix: dateInMilliseconds, utc: myDateString})
+  
+    // Check if date provided is empty
+  } else if (!req.params.date) {
+    let currentDate = new Date();
+    let dateInMilliseconds = Date.parse(currentDate);
+    let myDateString = currentDate.toGMTString();
+
+    // Respond if input is an empty date
+    res.json({unix: dateInMilliseconds, utc: myDateString})
+  
+    // Input is invalid
   } else {
-    // Get date in milliseconds and store it into a variable
-    let dateNumber = +req.params.date
-    console.log(dateNumber);
-    console.log(typeof(dateNumber));
-
-    // Get full date using the dateNumber variable
-    let myDate = new Date(dateNumber);
-    console.log(myDate);
-
-    // Check if dateNumber is valid
-    if (typeof(dateNumber) === "number") {
-
-      console.log("valid input")
-    } else {
-      // If input date string is invalid
-      res.json({error : "Invalid Date"});
-    } 
+    res.json({error: "Invalid Date"})
   }
 })
 
